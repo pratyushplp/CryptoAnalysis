@@ -1,5 +1,5 @@
 # CryptoAnalysis
-Analysis and prediction of Crypto data using HDFS,Pyspark,AWS,Mongo,Docker and React
+Analysis and prediction of Crypto data using HDFS,Pyspark,AWS,Postgres,dot net 6,Docker and React
 
 
 #Input websocket data Kline details
