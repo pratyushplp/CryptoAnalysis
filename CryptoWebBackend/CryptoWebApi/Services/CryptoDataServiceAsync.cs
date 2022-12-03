@@ -32,6 +32,26 @@ public class CryptoDataServiceAsync: ICryptoDataServiceAsync
 
         return serviceResponse;
     }
+    
+    public async Task<ServiceResponse<List<OHLCV>>> GetOHLCVBySymbol(string symbol, DateTime startTime, DateTime closeTime)
+    {
+        ServiceResponse<List<OHLCV>> serviceResponse = new ServiceResponse<List<OHLCV>>();
+
+        try
+        {
+            var tempData  = await _dbContext.CryptoData
+                                                    .Where(x => x.StartTime >= startTime && x.CloseTime <= closeTime)
+                                                    .OrderBy(x=>x.StartTime).ToListAsync();
+            serviceResponse.Data = OHLCV.covertDataToOHLCV(tempData);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return serviceResponse;
+    }
 
     public Task<ServiceResponse<List<CryptoData>>> GetMultipleCryptoBySymbol(List<string> symbols, DateTime startTime, DateTime closeTime)
     {
