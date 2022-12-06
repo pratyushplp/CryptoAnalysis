@@ -2,6 +2,7 @@ using CryptoWebApi.Data;
 using CryptoWebApi.Models;
 using CryptoWebApi.Services.Wrapper;
 using Microsoft.EntityFrameworkCore;
+using CryptoWebApi.Models.Crypto;
 
 namespace CryptoWebApi.Services;
 
@@ -42,7 +43,9 @@ public class CryptoDataServiceAsync: ICryptoDataServiceAsync
             var tempData  = await _dbContext.CryptoData
                                                     .Where(x => x.StartTime >= startTime && x.CloseTime <= closeTime)
                                                     .OrderBy(x=>x.StartTime).ToListAsync();
+            
             serviceResponse.Data = OHLCV.covertDataToOHLCV(tempData);
+            
         }
         catch (Exception e)
         {
@@ -57,4 +60,35 @@ public class CryptoDataServiceAsync: ICryptoDataServiceAsync
     {
         throw new NotImplementedException();
     }
+
+    public async Task<ServiceResponse<List<AggregateData>>> GetAllAggregateData(DateTime date)
+    {
+        ServiceResponse<List<AggregateData>> serviceResponse = new ServiceResponse<List<AggregateData>>();
+
+        try
+        {
+            var temp = await _dbContext.AggregateData.Where(x=>x.CloseDate == date).ToListAsync();
+            serviceResponse.Data =  temp.GroupBy(x=> new {x.Symbol,x.CloseDate})
+                                                                  .Select((group,index)=>
+                                                                      new AggregateData
+                                                                      {   //TODO: add auto increment id NOT UNDERSTOOD, SEE ONCE MORE
+                                                                          id = index,
+                                                                          Symbol = group.Key.Symbol, 
+                                                                          CloseDate = group.Key.CloseDate,
+                                                                          TotalBaseVolume = group.Sum(item=>item.TotalBaseVolume),
+                                                                          TotalQuoteVolume = group.Sum(item=>item.TotalQuoteVolume),
+                                                                          TotalNumTrades = group.Sum(item=>item.TotalNumTrades)
+                                                                      }).ToList();
+            
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+
+        return serviceResponse;    
+    }
+
+
 }

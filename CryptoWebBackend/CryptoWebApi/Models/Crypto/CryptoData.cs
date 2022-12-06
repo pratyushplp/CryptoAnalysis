@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-
-namespace CryptoWebApi.Models;
-
 using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CryptoWebApi.Models.Crypto;
 
 public class CryptoData
 {
