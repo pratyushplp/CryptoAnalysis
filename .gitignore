@@ -35,4 +35,5 @@ msbuild.wrn
 
 #custom
 /Scripts/SparkETLTest.ipynb
-.DS_Store
+/CryptoWebBackend/CryptoWebApi/Migrations
+/CryptoWebBackend/Scripts
