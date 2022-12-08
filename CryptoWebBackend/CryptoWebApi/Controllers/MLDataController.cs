@@ -45,7 +45,7 @@ public class MLDataController : ControllerBase
         {
             return NotFound();
         }
-        ServiceResponse<Prediction> result = await _mlDataServiceAsync.GetPredictionData(symbol,DateTime.Parse(closeDate));
+        ServiceResponse<Prediction> result = await _mlDataServiceAsync.GetPredictionData(symbol.ToUpper(),DateTime.Parse(closeDate));
         if (result.Data == null) 
             return NotFound(result);
         
