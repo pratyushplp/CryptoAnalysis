@@ -35,3 +35,4 @@ msbuild.wrn
 
 #custom
 /Scripts/SparkETLTest.ipynb
+.DS_Store
